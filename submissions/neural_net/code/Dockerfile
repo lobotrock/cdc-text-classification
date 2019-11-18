@@ -18,6 +18,7 @@ COPY prediction.py code/prediction.py
 COPY test.csv code/test.csv
 COPY models/tokenizer.pickle code/tokenizer.pickle
 COPY models/keras_try1.h5 code/keras_try1.h5
+COPY models/encoder.pickle code/encoder.pickle
 
 WORKDIR code
 CMD ["python", "prediction.py"]

@@ -95,9 +95,17 @@ def add_prediction_to_df(df, prediction_matix, prediction_column_name, keep_colu
     :return: output dataframe
     """
     prediction = prediction_matix.argmax(1)
+    decoded_predictions = decode_prediction(prediction)
     final_df = df[keep_columns]
-    final_df[prediction_column_name] = prediction
+    final_df[prediction_column_name] = decoded_predictions
     return final_df
+
+
+def decode_prediction(predictions):
+    with open('encoder.pickle', 'rb') as handle:
+        encoder = pickle.load(handle)
+
+    return encoder.inverse_transform(predictions)
 
 
 def write_output(df):
@@ -112,7 +120,18 @@ def write_output(df):
     output_dir = "/solution/" if os.path.exists("/solution") else ""
     print(f"output_dir: {output_dir}")
 
-    df.to_csv(f'{output_dir}solution.csv')
+    df.to_csv(f'{output_dir}solution.csv', index=False)
+
+
+def write_output2(df):
+    import csv
+
+    with open('../solution/solution2.csv', 'w') as csv_output:
+        writer = csv.DictWriter(csv_output, ['text', 'sex', 'age', 'event'])
+        writer.writeheader()
+        for index, row in df.iterrows():
+            csv_row = {'text': row['text'], 'sex': row['sex'], 'age': row['age'], 'event': row['event']}
+            writer.writerow(csv_row)
 
 
 if __name__ == '__main__':
